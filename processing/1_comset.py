@@ -15,7 +15,7 @@ for line in open(comdata):
     com = tmp[1].strip()
     com = com.split()
     if len(com) > 13 or len(com) < 3:
-    	continue
+        continue
     com = ' '.join(com)
     fo.write('{}, <s> {} </s>\n'.format(fid, com))
             

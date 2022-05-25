@@ -9,7 +9,7 @@ tdatlen = 100
 smllen = 100 # average is 870
 
 def save(obj, filename):
-	pickle.dump(obj, open(filename, 'wb'))
+    pickle.dump(obj, open(filename, 'wb'))
 
 
 coms_trainf = './output/coms.train'
@@ -99,11 +99,11 @@ out_config = {'tdatvocabsize': tdatstok.vocab_size, 'sdatvocabsize': sdatstok.vo
             'smllen': smllen}
 
 dataset = {'ctrain': com_train, 'cval': com_val, 'ctest': com_test, 
-			'dstrain': sdats_train, 'dsval': sdats_val, 'dstest': sdats_test,
-			'dttrain': tdats_train, 'dtval': tdats_val, 'dttest': tdats_test,
-			'strain_nodes': srcml_train_nodes, 'sval_nodes': srcml_val_nodes, 'stest_nodes': srcml_test_nodes, 
-			'strain_edges': srcml_train_edges, 'sval_edges': srcml_val_edges, 'stest_edges': srcml_test_edges, 
-			'comstok': comstok, 'tdatstok': tdatstok, 'sdatstok': sdatstok, 'smltok': smlstok,
+            'dstrain': sdats_train, 'dsval': sdats_val, 'dstest': sdats_test,
+            'dttrain': tdats_train, 'dtval': tdats_val, 'dttest': tdats_test,
+            'strain_nodes': srcml_train_nodes, 'sval_nodes': srcml_val_nodes, 'stest_nodes': srcml_test_nodes,
+            'strain_edges': srcml_train_edges, 'sval_edges': srcml_val_edges, 'stest_edges': srcml_test_edges,
+            'comstok': comstok, 'tdatstok': tdatstok, 'sdatstok': sdatstok, 'smltok': smlstok,
             'config': out_config}
 
 save(dataset, 'dataset.pkl')

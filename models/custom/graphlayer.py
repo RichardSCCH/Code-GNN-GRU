@@ -34,7 +34,8 @@ class GCNLayer(Layer):
         assert isinstance(x, list)
         # # Get shapes of our inputs and weights
         nodes, edges = x
-        edges += K.eye(int(edges.shape[1]))
+        tmp = int(edges.shape[1])
+        edges += tf.eye(tmp)
         output = tf.matmul(edges,nodes)
         output = tf.matmul(output, self.kernel)
 

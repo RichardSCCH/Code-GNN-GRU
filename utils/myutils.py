@@ -3,6 +3,7 @@ import sys
 from timeit import default_timer as timer
 
 import keras
+import tensorflow.keras
 import numpy as np
 
 # do NOT import keras in this header area, it will break predict.py
@@ -15,6 +16,7 @@ sys.path.append(dataprep)
 start = 0
 end = 0
 
+
 def init_tf(gpu):
     import os
     os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
@@ -22,11 +24,12 @@ def init_tf(gpu):
 
 
 def index2word(tok):
-	i2w = {}
-	for word, index in tok.w2i.items():
-		i2w[index] = word
+    i2w = {}
+    for word, index in tok.w2i.items():
+        i2w[index] = word
 
-	return i2w
+    return i2w
+
 
 def seq2sent(seq, tokenizer):
     sent = []
@@ -34,9 +37,10 @@ def seq2sent(seq, tokenizer):
     for i in seq:
         sent.append(check[i])
 
-    return(' '.join(sent))
-            
-class batch_gen(keras.utils.Sequence):
+    return (' '.join(sent))
+
+
+class batch_gen(tensorflow.keras.utils.Sequence):
     def __init__(self, seqdata, tt, config, nodedata=None, edgedata=None):
         self.comvocabsize = config['comvocabsize']
         self.tt = tt
@@ -46,20 +50,19 @@ class batch_gen(keras.utils.Sequence):
         self.config = config
         self.edgedata = edgedata
         self.nodedata = nodedata
-        random.shuffle(self.allfids) # actually, might need to sort allfids to ensure same order
+        random.shuffle(self.allfids)  # actually, might need to sort allfids to ensure same order
 
     def __getitem__(self, idx):
-        start = (idx*self.batch_size)
-        end = self.batch_size*(idx+1)
+        start = (idx * self.batch_size)
+        end = self.batch_size * (idx + 1)
         batchfids = self.allfids[start:end]
         return self.make_batch(batchfids)
 
     def make_batch(self, batchfids):
         return self.divideseqs(batchfids, self.seqdata, self.nodedata, self.edgedata, self.comvocabsize, self.tt)
-        
 
     def __len__(self):
-        return int(np.ceil(len(list(self.seqdata['dt%s' % (self.tt)]))/self.batch_size))
+        return int(np.ceil(len(list(self.seqdata['dt%s' % (self.tt)])) / self.batch_size))
 
     def on_epoch_end(self):
         random.shuffle(self.allfids)
@@ -119,7 +122,7 @@ class batch_gen(keras.utils.Sequence):
 
                     comseq = wcomseq[0:i]
                     comout = wcomseq[i]
-                    comout = keras.utils.to_categorical(comout, num_classes=comvocabsize)
+                    comout = tensorflow.keras.utils.to_categorical(comout, num_classes=comvocabsize)
 
                     for j in range(0, len(wcomseq)):
                         try:
@@ -130,7 +133,6 @@ class batch_gen(keras.utils.Sequence):
                     comseqs.append(comseq)
                     comouts.append(np.asarray(comout))
 
- 
         tdatseqs = np.asarray(tdatseqs)
         smlnodes = np.asarray(smlnodes)
 
@@ -151,4 +153,3 @@ class batch_gen(keras.utils.Sequence):
                     comouts]
             #     else:
             # return [[comseqs, smlnodes, wedge_1], comouts]
-

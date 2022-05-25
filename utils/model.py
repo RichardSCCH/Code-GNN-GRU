@@ -10,9 +10,9 @@ def create_model(modeltype, config):
     if modeltype == 'codegnngru':
         mdl = CodeGNNGRU(config)
     elif modeltype == 'codegnnbilstm':
-    	mdl = CodeGNNBiLSTM(config)
+        mdl = CodeGNNBiLSTM(config)
     elif modeltype == 'codegnndense':
-    	mdl = CodeGNNDense(config)
+        mdl = CodeGNNDense(config)
     else:
         print("{} is not a valid model type".format(modeltype))
         exit(1)

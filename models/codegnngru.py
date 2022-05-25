@@ -1,6 +1,6 @@
 import keras
 import keras.utils
-from models.custom.graphlayer import GCNLayer
+from .custom.graphlayer import GCNLayer
 from keras.layers import Input, Dense, Embedding, Activation, concatenate, Flatten, CuDNNGRU, TimeDistributed, dot
 from keras.models import Model
 

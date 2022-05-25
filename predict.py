@@ -15,7 +15,7 @@ from timeit import default_timer as timer
 from models.custom.graphlayer import GCNLayer
 
 
-def gen_pred(model, data, comstok, comlen, batchsize, config, strat='greedy'):
+def gen_pred(model, data, comstok, comlen, batchsize, config, strat='greedy', tdatstok=None):
     # right now, only greedy search is supported...
     tdats, coms, wsmlnodes, wedge_1 = zip(*data.values())
     tdats = np.array(tdats)
@@ -31,8 +31,8 @@ def gen_pred(model, data, comstok, comlen, batchsize, config, strat='greedy'):
 
 
     final_data = {}
-    for fid, com in zip(data.keys(), coms):
-        final_data[fid] = seq2sent(com, comstok)
+    for fid, com, fun in zip(data.keys(), coms, tdats):
+        final_data[fid] = [seq2sent(com, comstok), seq2sent(fun, tdatstok)]
 
     return final_data
 
@@ -61,7 +61,7 @@ if __name__ == '__main__':
 
     # User set parameters#
     config['maxastnodes'] = 100
-    config['asthops'] = 10
+    config['asthops'] = 2
 
     if modeltype == None:
         modeltype = modelfile.split('_')[0].split('/')[-1]
@@ -77,13 +77,10 @@ if __name__ == '__main__':
     seqdata = pickle.load(open('%s/dataset.pkl' % (dataprep), 'rb'))
 
     allfids = list(seqdata['ctest'].keys())
-    datvocabsize = tdatstok.vocab_size
-    comvocabsize = comstok.vocab_size
-    smlvocabsize = smltok.vocab_size
 
-    config['tdatvocabsize'] = datvocabsize
-    config['comvocabsize'] = comvocabsize
-    config['smlvocabsize'] = smlvocabsize
+    config['tdatvocabsize'] = tdatstok.vocab_size
+    config['comvocabsize'] = comstok.vocab_size
+    config['smlvocabsize'] = smltok.vocab_size
 
     # set sequence lengths
     config['tdatlen'] = 50
@@ -108,7 +105,7 @@ if __name__ == '__main__':
     comstart = np.zeros(comlen)
     stk = comstok.w2i['<s>']
     comstart[0] = stk
-    outfn = outdir+"/predictions/predict-{}.txt".format(modeltype)
+    outfn = outdir+"predictions/predict-{}.txt".format(modeltype)
     outf = open(outfn, 'w')
     print("writing to file: " + outfn)
     batch_sets = [allfids[i:i+batchsize] for i in range(0, len(allfids), batchsize)]
@@ -121,10 +118,10 @@ if __name__ == '__main__':
         bg = batch_gen(seqdata, 'test', config, nodedata=node_data, edgedata=edgedata)
         batch = bg.make_batch(fid_set)
    
-        batch_results = gen_pred(model, batch, comstok, comlen, batchsize, config, strat='greedy')
+        batch_results = gen_pred(model, batch, comstok, comlen, batchsize, config, strat='greedy', tdatstok=smltok)
         
         for key, val in batch_results.items():
-            outf.write("{}\t{}\n".format(key, val))
+            outf.write("{}\t{}\t{}\n".format(key, val[1], val[0]))
 
         end = timer ()
         print("{} processed, {} per second this batch".format((c+1)*batchsize, int(batchsize/(end-st))), end='\r')
