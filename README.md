@@ -1,3 +1,16 @@
+# Disclaimer
+The implementation in this repository has been taken from https://github.com/wasiahmad/NeuralCodeSum and has been adapted for some newer python packages.
+
+## Docker commands:
+Build and tag image:\
+```docker build -t <tag> .```
+
+Start container and allow usage of all gpus:\
+```docker run --gpus all -it --name <name> <image>```\
+```nvidia-docker run -it --rm --runtime=nvidia -e NVIDIA_VISIBLE_DEVICES=2,3 --name ncs --mount type=bind,source="$(pwd)"/data,target=/usr/src/app/data/java neural-code-sum```
+
+# Original Readme
+---
 # ICPC2020 CodeGNN
 This code is part of the reproducibility package for the ICPC 2020 paper "Improved Code Summarization via a Graph Neural Network" - [arxiv](https://arxiv.org/abs/2004.02843)
 
