@@ -1,5 +1,5 @@
 # Disclaimer
-The implementation in this repository has been taken from https://github.com/wasiahmad/NeuralCodeSum and has been adapted for some newer python packages.
+The implementation in this repository has been taken from https://github.com/acleclair/ICPC2020_GNN and has been adapted for some newer python packages.
 
 ## Docker commands:
 Build and tag image:\
